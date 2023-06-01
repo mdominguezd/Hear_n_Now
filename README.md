@@ -23,8 +23,13 @@ Files used for visualization purposes in the story maps created.
 * `Corrine_1990_2018.zip`: Zippped folder with .tif files that show the land cover change from 1990 to 2018.
 * `Het_Heirinck_VI.zip`: Zipped folder with .tif files of vegetation indices calculated for the area around Het Reirink, Achterhoek, the Netherlands.
 * Go [here](https://drive.google.com/file/d/16ETHCfMj3_QmN5gU960lUimnDYm53WPD/view?usp=sharing) to download the point clouds.
+* Check the code with which we calculated the acoustic indices of the audios [here](https://colab.research.google.com/drive/1w5arc29Hxe52qfZgo6AdiwFBEkXkKK4z?usp=sharing)
 
 ## BirdData
 
 Excel file with all of the bird observation during the day when audio was recorded in the Achterhoek. (24 and 25 May 2023) 
+
+## IDV Documents
+
+This folder includes the `data management plan` and the `case study` document.
 
