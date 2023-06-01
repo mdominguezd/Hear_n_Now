@@ -28,10 +28,6 @@ Files used for visualization purposes in the story maps created.
 * Go [here](https://drive.google.com/file/d/16ETHCfMj3_QmN5gU960lUimnDYm53WPD/view?usp=sharing) to download the point clouds. The point clouds were acquired using the Green Valley Mobile Laser Scanner in the surroundings of the Reirink, Achterhoek, The Netherlands.
 * Go [here](https://wageningenur4.sharepoint.com/sites/3Dradarguys/Gedeelde%20documenten/Forms/AllItems.aspx?id=%2Fsites%2F3Dradarguys%2FGedeelde%20documenten%2FGeneral%2FIDV%2FAudiomoths&p=true&ga=1) to download the audio files that we used to detect bird species.
 
-## Google Colab code
-* Check the code with which we calculated the acoustic indices of the audios [here](https://colab.research.google.com/drive/1w5arc29Hxe52qfZgo6AdiwFBEkXkKK4z?usp=sharing)
-* The code used to get the Bird species can be accessed [here](https://colab.research.google.com/drive/19_LIVrV9PAirAP_alEODXYTYxgUOrZ7P?usp=sharing)
-
 ## BirdData
 
 Excel file with all of the bird observation during the day when audio was recorded in the Achterhoek. (24 and 25 May 2023) 
@@ -39,3 +35,11 @@ Excel file with all of the bird observation during the day when audio was record
 ## IDVDocuments
 
 This folder includes the `data management plan` and the `case study` document.
+
+## Google Colab code
+* Check the code with which we calculated the acoustic indices of the audios [here](https://colab.research.google.com/drive/1w5arc29Hxe52qfZgo6AdiwFBEkXkKK4z?usp=sharing)
+* The code used to get the Bird species can be accessed [here](https://colab.research.google.com/drive/19_LIVrV9PAirAP_alEODXYTYxgUOrZ7P?usp=sharing)
+
+## Google Earth Engine Code
+* The code to get the vegetation indices using Google Earth Engine is [here](https://code.earthengine.google.com/d9f0d033d38a959bbcb724cc2b92fa25)
+* You can access the code for the Land Cover Change analysis [here](https://code.earthengine.google.com/cb968d668e77795302e68da9c968c7d7)
