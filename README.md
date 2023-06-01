@@ -3,7 +3,7 @@
 The present repository has the code and data used in the making of the Hear & Now web application and the Story Maps associated to this project.
 
 * Here & Now application: **http://hearandnow.eu.pythonanywhere.com/**
-* ArcGIS Story Maps: **https://storymaps.arcgis.com/collections/9df713390129463784616c13f2acfc4f**
+* ArcGIS project Collection: **https://storymaps.arcgis.com/collections/9df713390129463784616c13f2acfc4f**
 
 ## Hear & Now application (APPs folder)
 
@@ -22,6 +22,7 @@ Files used for visualization purposes in the story maps created.
 * `NL_Hotspots.geojson` : File with the Bird biodiversity hotspots of he Netherlands accoding to eBird.
 * `Corrine_1990_2018.zip`: Zippped folder with .tif files that show the land cover change from 1990 to 2018.
 * `Het_Heirinck_VI.zip`: Zipped folder with .tif files of vegetation indices calculated for the area around Het Reirink, Achterhoek, the Netherlands.
+* Go [here](https://drive.google.com/file/d/16ETHCfMj3_QmN5gU960lUimnDYm53WPD/view?usp=sharing) to download the point clouds.
 
 ## BirdData
 
