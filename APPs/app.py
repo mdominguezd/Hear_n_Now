@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-from dash import Dash, dcc, html, callback, Input, Output
+from dash import Dash, dcc, html, callback, Input, Output, dash_table
 import base64, io
 import pandas as pd
 import os
@@ -13,6 +13,9 @@ import dash_bootstrap_components as dbc
 from pydub import AudioSegment
 # Credits: https://medium.com/@adrianmrit/creating-simple-image-datasets-with-flickr-api-2f19c164d82f
 from flickrapi import FlickrAPI
+from ebird.api import *
+import plotly.express as px
+from dash.exceptions import PreventUpdate
 
 with open('KEYS.txt') as f:
     lines = f.readlines()
@@ -21,6 +24,8 @@ KEY = [l.split(': ')[1].split('\n')[0] if ('Key' in l) else ' ' for l in lines][
 SECRET = [l.split(': ')[1].split('\n')[0] if ('Secret' in l) else ' ' for l in lines][2]
 
 flickr = FlickrAPI(KEY, SECRET)
+
+api_key = [l.split(': ')[1].split('\n')[0] if ('Key' in l) else ' ' for l in lines][-1]
 
 UPLOAD_DIRECTORY = "assets_app"
 
@@ -35,8 +40,23 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 app.title = 'HearAndNow'
 
-app.layout = html.Div([html.H1("Participate in our project!"),
-                       html.Img(src = r'assets/Hear & now.png', alt='image', style = {'width' : '20%', 'maxWidth' : 400}),
+app.layout = html.Div([html.H1("Welcome to our project!"),
+                       html.Div([], style = {'height' : 40}),
+                       html.Div([html.Img(src = r'assets/Hear & now.png', alt='image', style = {'width' : '20%','aspect-ratio' : 1/1, 'margin' : 'auto'}),
+                                 html.Div([dcc.Markdown("Hey there! Good to have you here. **Hear and Now** was born as a project for the Geo Information Science and Remote Sensing intergration course given "
+                                                        "for master's students in *Wageningen University & Research*. During this course, together with other 5 master's  students, we visited the beautiful "
+                                                        "Achterhoek region in the Netherlands. During out time there we fell in love with the enchanting songs of birds in the region. Because of this we developed "
+                                                        "a web application for bird watchers or bird waching enthusiasts like us. Our main objective with this application is to make people more aware of the"
+                                                        "biodivesity around them."
+                                                        ),
+                                           dcc.Markdown("In our web application you will find what you need to boost your love for bird watching. In it you can either detect birds using audio files or check some "
+                                                        "birds that have been seen nearby. Right now the default coordinates are the ones in the Achterhoek region, nevertheless, you can simply change this by "
+                                                        "modifying the values in Latitude and Longitude."
+                                                        ),
+                                           dcc.Markdown("Hope you enjoy the app as much as we enjoyed making it for you! :)")]),
+                                ], style = {'display':'flex', 'width' : '70%', 'margin' : 'auto'}),
+                       html.Div([], style = {'height':20}),
+                       html.Div([], style = {'height' : 10, 'background-color' : 'black', 'width' : '80%', 'margin' : 'auto'}),
                        html.Div([], style = {'height':20}),
                        html.H2("Upload here your audio files :)"),
                        dcc.Checklist(id = 'RangeOfDetection',options = ['Detect only birds in the Achterhoek'], value = ['Detect only birds in the Achterhoek']),
@@ -55,14 +75,36 @@ app.layout = html.Div([html.H1("Participate in our project!"),
                                  ),
                        dcc.Loading(html.Div([
                            html.Div([],style = {'height' : 60}),
-                           html.H2("Bird species detected"),
+                           html.H2("Bird species detected:"),
                            html.Div([html.Div(id="file-list", style = {'width' : '32%', 'margin' : 'auto'}),
                                      html.Div(id = 'img-list', style = {'width' : '32%', 'margin' : 'auto'}),
                                      html.Div(id = 'audios', style = {'width' : '32%', 'margin' : 'auto'})],
                                     style = {'display':'flex'}
                                    ),
-                       ])),
-                      ],
+                       ], style = {'height' : 450})),
+                       html.Div([], style = {'height':20}),
+                       html.Div([], style = {'height' : 10, 'background-color' : 'black', 'width' : '80%', 'margin' : 'auto'}),
+                       html.Div([], style = {'height':20}),
+                       html.H2('Have a look at some of the birds that\nhave been detected nearby.'),
+                       html.Div([], style = {'height' : 50}),
+                       html.Div([html.P('Latitude  : ', style = {"width": "50%", 'font-family' : 'bahnschrift'}), 
+                                 dcc.Input(id = 'lat', type='number', value = 52.03, style = {"width": "50%"})], 
+                                style = {'display' : 'flex', "width": "20%", "position": "relative"}),
+                       html.Div([html.P('Longitude: ', style = {"width": "50%", 'font-family' : 'bahnschrift'}), 
+                                 dcc.Input(id = 'long', type='number', value = 6.65, style = {"width": "50%"})], 
+                                style = {'display' : 'flex', "width": "20%", "position": "relative"}),
+                       html.Div([], style = {'height' : 50}),
+                       html.P(id = 'click'),
+                       dcc.Loading(html.Div(dcc.Graph(id = 'fig', ), 
+                                            style={"height": "400px", "width": "80%", "position": "relative", "margin":"auto"}), style = {"height": "400px"}),
+                       html.Div([], style = {'height' : 90, 'width':"100%"}),
+                       html.Div(dash_table.DataTable(id = 'observations',
+                                                     style_header={'backgroundColor': 'rgb(30, 30, 30)','color': 'white', 'fontFamily' : 'bahnschrift', 'textAlign' : 'center'},
+                                                     style_data = {'whiteSpace':'normal', 'textAlign' : 'center'}
+                                                     ), 
+                                style={"height": "400px", "width": "80%", "position": "relative", "margin":"auto"}),
+                       
+                       ],
                       style={"width": "100%", "textAlign": "center", 'margin':'auto'},
                      )
 
@@ -181,5 +223,57 @@ def update_output(uploaded_filenames, uploaded_file_contents, rangeDet):
         return [html.Div([sp], style = {'height' : 200, 'margin' : 'auto'}) for sp in species], [html.Div([html.Img(src = get_picture(sp)[0], style = {'margin' : 'auto'})], style = {'height' : 200, 'margin' : 'auto'}) for sp in species], [html.Div([html.Audio(src = UPLOAD_DIRECTORY + '/' + sp + '.mp3', controls = True, title = sp)], style = {'height' : 200, 'margin' : 'auto'}) for sp in species]
 
 
+
+
+@app.callback(
+    Output("fig", "figure"),
+    Output('observations', 'data'),
+    Input("lat", "value"),
+    Input("long", "value"),
+)
+def get_table_n_map(lat, long):
+    
+    if (lat is None or long is None):
+        print('que pasa')
+        raise PreventUpdate
+    else:
+        coords = [lat, long]
+        records = get_nearby_observations(api_key, coords[0], coords[1], dist=20, back=7)
+        
+        # Avoid update if no records were found
+        if len(records) == 0:
+            print('no actualiza')
+            raise PreventUpdate
+        else:
+            print('mapactualiza')
+            df = pd.json_normalize(records)
+
+            count = df.groupby(['lat','lng']).count().reset_index()
+            count = count[['lat','lng','howMany']]
+            count.columns = ['lat','lng','Number of observations']
+
+            map_b = px.scatter_mapbox(count, 'lat', 'lng', zoom = 10,
+                                      color_continuous_scale = ['red','yellow','lightgreen'],
+                                      color = 'Number of observations', size = 'Number of observations', 
+                                      mapbox_style = 'carto-darkmatter')
+            map_b.update_layout(margin = { 'r': 0, 't': 0, 'b': 0, 'l': 0 })
+
+            records = [{'Common name' : i['comName'], 'Scientific name' : i['sciName'], 'Location' : i['locName']} for i in records]
+        
+        return map_b, records
+
+@app.callback(
+    [Output('long','value'),Output('lat', 'value')], 
+    Input('fig', 'relayoutData')
+)
+def click(clickData):
+    if (clickData == None or 'mapbox.center' not in clickData.keys()):
+        print('no actualiza')
+        return 6.65, 52.03
+        # raise PreventUpdate
+    else:
+        print('actualiza')
+        return round(clickData['mapbox.center']['lon'], 3), round(clickData['mapbox.center']['lat'], 3)
+
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader = False, port = 8060)
+    app.run_server(debug=True, use_reloader = False, port = 8070)
